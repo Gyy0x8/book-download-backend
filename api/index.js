@@ -16,13 +16,13 @@ app.get('/', (req, res) => {
   });
 });
 
-// API 路由
+// 直接在这里引入路由，而不是作为单独的函数
 app.use('/auth', require('./auth'));
 app.use('/books', require('./books'));
 
 // 404 处理
 app.use('*', (req, res) => {
-  res.status(404).json({ error: '接口不存在' });
+  res.status(404).json({ error: '接口不存在', path: req.path });
 });
 
 // 错误处理中间件
@@ -34,12 +34,5 @@ app.use((error, req, res, next) => {
   });
 });
 
-// 明确添加端口监听
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 服务器运行在 http://localhost:${PORT}`);
-  console.log(`📊 环境: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`⏰ 启动时间: ${new Date().toISOString()}`);
-});
-
+// 导出为 Vercel Serverless Function
 module.exports = app;
